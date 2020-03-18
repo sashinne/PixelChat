@@ -1,0 +1,10 @@
+/.gradle/
+/.idea/
+/gradle/wrapper/
+/out/production/PixelChat.main/
+/PixelChat.iml
+/src/libs/
+/src/test/java/
+/src/test/
+/src/libs/
+/gradlew.bat

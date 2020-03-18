@@ -39,11 +39,11 @@ import java.util.UUID;
 
 @Plugin(
         id = "pixelchat",
-        name = "Pixelchat",
-        description = "b",
-        url = "b",
+        name = "PixelChat",
+        description = "PixelChat allows you to display your Pixelmon in chat",
+        url = "http://hhservers.co.uk",
         authors = {
-                "b"
+                "blvxr"
         }
 )
 public class PixelChat {
@@ -75,15 +75,19 @@ public class PixelChat {
             Optional<ItemType> opItem = Sponge.getRegistry().getType(ItemType.class, itemTypeID);
             ItemStackSnapshot itemSnapshot = opItem.get().getTemplate();
             ItemStack realSprite = itemSnapshot.createStack();
-            Text EVTemplate = Text.of("Attack: " + evStore.attack + "\nDefence: " + evStore.defence + "\nSpeed: " + evStore.speed + "\nSpAtk: " + evStore.specialAttack + "\nSpDef: " + evStore.specialDefence);
+            Text EVTemplate = TextSerializers.FORMATTING_CODE.deserialize("&aAttack:&d " + evStore.attack + "\n&aDefence:&d " + evStore.defence + "\n&aSpeed:&d " + evStore.speed + "\n&aSpAtk:&d " + evStore.specialAttack + "\n&aSpDef:&d " + evStore.specialDefence);
             //Text evs = Text.builder("&l&8[&r&aEVs&r&l&8]&r").onHover(TextActions.showText(EVTemplate)).build();
-            Text IVTemplate = Text.of("Attack: " + ivStore.attack + "\nDefence: " + ivStore.defence + "\nSpeed: " + ivStore.speed + "\nSpAtk: " + ivStore.specialAttack + "\nSpDef: " + ivStore.specialDefence);
+            Text IVTemplate = TextSerializers.FORMATTING_CODE.deserialize("&aAttack:&d " + ivStore.attack + "\n&aDefence:&d " + ivStore.defence + "\n&aSpeed:&d " + ivStore.speed + "\n&aSpAtk:&d " + ivStore.specialAttack + "\n&aSpDef:&d " + ivStore.specialDefence);
             Text ivs = Text.builder("[").color(TextColors.DARK_GRAY).append(Text.builder("IVs").color(TextColors.GREEN).build()).append(Text.builder("]").color(TextColors.DARK_GRAY).build()).onHover(TextActions.showText(IVTemplate)).build();
             Text evs = Text.builder("[").color(TextColors.DARK_GRAY).append(Text.builder("EVs").color(TextColors.GREEN).build()).append(Text.builder("]").color(TextColors.DARK_GRAY).build()).onHover(TextActions.showText(EVTemplate)).build();
             event.setCancelled(true);
             World world = player.getWorld();
             Text messageathon = TextSerializers.FORMATTING_CODE.deserialize("&l&8[&r&a" + pokeName + "&l&8]&r").toBuilder()
-                    .onHover(TextActions.showText(TextSerializers.FORMATTING_CODE.deserialize("&aName:&r " + pokeName + "\n&aLevel:&r " + pokeLevel.toString() + "\n")))
+                    .onHover(TextActions.showText(TextSerializers.FORMATTING_CODE.deserialize("&aGender:&d " + pokemon.getGender().toString()
+                            + "\n&aLevel:&d " + pokeLevel.toString()
+                            + "\n&aAbility:&d " + pokemon.getAbilityName()
+                            + "\n&aNature:&d " + pokemon.getNature().name()
+                            + "\n&aHappiness:&d " + pokemon.getFriendship())))
                     //.onHover(TextActions.showItem(itemSnapshot))
                     .append(evs)
                     .append(ivs)

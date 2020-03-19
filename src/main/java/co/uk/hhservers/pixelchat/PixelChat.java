@@ -97,11 +97,15 @@ public class PixelChat {
                     .append(evs)
                     .append(ivs)
                     .build();
+            Text wat = PokeData.getHoverText(pokemon);
             Text finalmessage = Text.builder("[").color(TextColors.DARK_GRAY)
                     .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
                     .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())
                     .append(Text.builder("has shared their Pokémon: ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @pokeX, replacing X with a slot number to display your Poké in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
-                    .append(messageathon).build();
+                    .append(Text.of(Text.NEW_LINE))
+                    .append(wat).build();
+            //MessageChannel.TO_PLAYERS.send(finalmessage);
+
             MessageChannel.TO_PLAYERS.send(finalmessage);
             //player.sendMessage(messageathon);
         }

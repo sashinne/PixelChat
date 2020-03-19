@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 import static org.spongepowered.api.text.Text.NEW_LINE;
 import static org.spongepowered.api.text.format.TextColors.*;
+import static org.spongepowered.api.text.format.TextStyles.BOLD;
 import static org.spongepowered.api.text.format.TextStyles.UNDERLINE;
 import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
 
@@ -149,11 +150,11 @@ public class PokeData {
         String itemText = "None";
 
         ItemStack itemStack = pokemonData.getHeldItem();
-        if(itemStack != ItemStack.EMPTY && itemStack.getItem() != ItemTypes.AIR) {//Prevent pixelmon bug that allows item:air
+        //if(itemStack != ItemStack.EMPTY && itemStack.getItem() != ItemTypes.AIR) {//Prevent pixelmon bug that allows item:air
             //noinspection ConstantConditions
             org.spongepowered.api.item.inventory.ItemStack heldItemStack = (org.spongepowered.api.item.inventory.ItemStack) (Object) itemStack;//TODO check format and make less ugh
-            itemText = heldItemStack.getType().getTranslation().get();
-        }
+           itemText = heldItemStack.getType().getTranslation().get();
+       // }
 
         return itemText;
     }
@@ -264,7 +265,7 @@ public class PokeData {
         //★ = black star = \u2605
 
         Text.Builder statBuilder = Text.builder();
-        statBuilder.append(Text.of(RED, "[Stats]"));
+        statBuilder.append(Text.of(DARK_GRAY,BOLD,"[",NONE,GREEN,"Stats",DARK_GRAY,BOLD,"]",RESET));
 
         String itemText = getHeldItemName(pokemonData);
 
@@ -275,12 +276,13 @@ public class PokeData {
                 NEW_LINE, GREEN, "Growth: ", pokemonData.getGrowth().toString(),
                 NEW_LINE, GOLD, "Ability: ", (pokemonData.getAbilitySlot() != 2 ? GOLD : GRAY), pokemonData.getAbility().getName(),
                 NEW_LINE, DARK_PURPLE, "OT: ", pokemonData.getOriginalTrainer(),
-                NEW_LINE, RED, "Item: ", itemText
+                NEW_LINE, RED, "Item: ", itemText,
+                NEW_LINE, LIGHT_PURPLE, "Pokeball:", pokemonData.getCaughtBall().name()
         );
         statBuilder.onHover(TextActions.showText(statHover));
 
         Text.Builder evBuilder = Text.builder();
-        evBuilder.append(Text.of(TextColors.GOLD, "[EVs]"));
+        evBuilder.append(Text.of(DARK_GRAY,BOLD,"[",NONE,GREEN,"EVs",DARK_GRAY,BOLD,"]",NONE));
         Text evHover = Text.of(GOLD, UNDERLINE, "EVs",
                 NEW_LINE, "HP: ", pokemonData.getEVs().get(StatsType.HP),
                 NEW_LINE, "Attack: ", pokemonData.getEVs().get(StatsType.Attack),
@@ -292,7 +294,7 @@ public class PokeData {
         evBuilder.onHover(TextActions.showText(evHover));
 
         Text.Builder ivBuilder = Text.builder();
-        ivBuilder.append(Text.of(TextColors.LIGHT_PURPLE, "[IVs]"));
+        ivBuilder.append(Text.of(DARK_GRAY,BOLD,"[",NONE,GREEN,"IVs",DARK_GRAY,BOLD,"]",NONE));
         Text ivHover = Text.of(LIGHT_PURPLE, UNDERLINE, "IVs",
                 NEW_LINE, "HP: ", pokemonData.getIVs().get(StatsType.HP),
                 NEW_LINE, "Attack: ", pokemonData.getIVs().get(StatsType.Attack),
@@ -304,18 +306,17 @@ public class PokeData {
         ivBuilder.onHover(TextActions.showText(ivHover));
 
         Text.Builder movesBuilder = Text.builder();
-        movesBuilder.append(Text.of(TextColors.BLUE, "[Moves]"));
+        movesBuilder.append(Text.of(DARK_GRAY,BOLD,"[",NONE,GREEN,"Moves",DARK_GRAY,BOLD,"]",NONE));
         Text movesHover = Text.of(
                 BLUE, UNDERLINE, "Moves",
-                NEW_LINE, "Move 1: ", pokemonData.getMoveset().get(0) != null ? pokemonData.getMoveset().get(0).savedAttack.getLocalizedName() : "None",
-                NEW_LINE, "Move 2: ", pokemonData.getMoveset().get(1) != null ? pokemonData.getMoveset().get(1).savedAttack.getLocalizedName() : "None",
-                NEW_LINE, "Move 3: ", pokemonData.getMoveset().get(2) != null ? pokemonData.getMoveset().get(2).savedAttack.getLocalizedName() : "None",
-                NEW_LINE, "Move 4: ", pokemonData.getMoveset().get(3) != null ? pokemonData.getMoveset().get(3).savedAttack.getLocalizedName() : "None"
+                NEW_LINE, "Move 1: ", pokemonData.getMoveset().get(0) != null ? pokemonData.getMoveset().get(0).toString() : "None",
+                NEW_LINE, "Move 2: ", pokemonData.getMoveset().get(1) != null ? pokemonData.getMoveset().get(1).toString() : "None",
+                NEW_LINE, "Move 3: ", pokemonData.getMoveset().get(2) != null ? pokemonData.getMoveset().get(2).toString() : "None",
+                NEW_LINE, "Move 4: ", pokemonData.getMoveset().get(3) != null ? pokemonData.getMoveset().get(3).toString() : "None"
         );
         movesBuilder.onHover(TextActions.showText(movesHover));
 
-
-        return Text.of(GREEN, (pokemonData.isShiny() ? YELLOW : ""), pokemonData.getSpecies().name, " ", statBuilder.build(), " ", evBuilder.build(), " ", ivBuilder.build(), " ", movesBuilder.build());
+        return Text.of(DARK_GRAY,BOLD,"[",RESET,NONE,GREEN, pokemonData.getSpecies().name,DARK_GRAY,BOLD,"]",RESET,NONE, " ", statBuilder.build(), " ", evBuilder.build(), " ", ivBuilder.build(), " ", movesBuilder.build());
     }
 
 }

@@ -3,8 +3,9 @@
 /gradle/wrapper/
 /out/production/PixelChat.main/
 /PixelChat.iml
-/src/libs/
+/libs/
 /src/test/java/
 /src/test/
-/src/libs/
+/libs/
 /gradlew.bat
+/src/TODO.TXT

@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.pixelmonmod.pixelmon.Pixelmon;
 import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
 import com.pixelmonmod.pixelmon.api.storage.PartyStorage;
+import com.pixelmonmod.pixelmon.client.gui.factory.config.PixelmonConfigGui;
 import com.pixelmonmod.pixelmon.entities.pixelmon.stats.EVStore;
 import com.pixelmonmod.pixelmon.entities.pixelmon.stats.IVStore;
 import com.pixelmonmod.pixelmon.storage.PlayerPartyStorage;
@@ -32,13 +33,16 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.text.transform.SimpleTextFormatter;
 import org.spongepowered.api.world.World;
+import sun.plugin2.message.Message;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Plugin(
-        id = "pixelchat",
+        id = "chatpixel",
         name = "PixelChat",
         description = "PixelChat allows you to display your Pixelmon in chat",
         url = "http://hhservers.co.uk",
@@ -67,6 +71,7 @@ public class PixelChat {
             Character slot = message.charAt(message.length() - 1);
             Integer slotInt = Integer.parseInt(slot.toString());
             Pokemon pokemon = party.get(slotInt);
+            assert pokemon != null;
             String pokeName = pokemon.getDisplayName();
             Integer pokeLevel = pokemon.getLevel();
             EVStore evStore = pokemon.getEVs();
@@ -99,6 +104,44 @@ public class PixelChat {
                     .append(messageathon).build();
             MessageChannel.TO_PLAYERS.send(finalmessage);
             //player.sendMessage(messageathon);
+        }
+        if (message.toLowerCase().startsWith("@party")) {
+
+            UUID uuid = player.getUniqueId();
+            PartyStorage playerParty = Pixelmon.storageManager.getParty(uuid);
+            Text hhmessage = Text.of("hi");
+            logger.info((String.valueOf(playerParty.getAll().length)));
+
+           /* for (int i = 0; i < playerParty.getAll().length; i++) {
+
+                hhmessage.toBuilder()
+                        .onHover(TextActions.showText(
+                        TextSerializers.FORMATTING_CODE.deserialize("&aName:")))
+                        .append(TextSerializers.FORMATTING_CODE.deserialize(playerParty.get(i).getDisplayName()))
+                        .append(TextSerializers.FORMATTING_CODE.deserialize("&dLevel:" + playerParty.get(i).getLevel()))
+                        .build();
+
+            }
+
+            MessageChannel.TO_PLAYERS.send(hhmessage);*/
+
+            Pokemon slot0 = playerParty.get(0);
+            Pokemon slot1 = playerParty.get(1);
+            Pokemon slot2 = playerParty.get(2);
+            Pokemon slot3 = playerParty.get(3);
+            Pokemon slot4 = playerParty.get(4);
+            //Pokemon slot4 = playerParty.get(4);
+            Pokemon slot5 = playerParty.get(5);
+            /*Pokemon[] pokeList = playerParty.getAll();
+            int numberOfItems = pokeList.length;
+            for (int i=0; i<numberOfItems; i++)
+            {
+                Pokemon poke = pokeList[i];
+                List<Text> textList = new ArrayList<>();
+                textList.add(Text.builder(poke.getDisplayName()).build());
+            }*/
+
+
         }
     }
 }

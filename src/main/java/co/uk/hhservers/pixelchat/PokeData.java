@@ -283,40 +283,40 @@ public class PokeData {
 
         Text.Builder evBuilder = Text.builder();
         evBuilder.append(Text.of(DARK_GRAY,BOLD,"[",NONE,GREEN,"EVs",DARK_GRAY,BOLD,"]",NONE));
-        Text evHover = Text.of(GOLD, UNDERLINE, "EVs",
-                NEW_LINE, "HP: ", pokemonData.getEVs().get(StatsType.HP),
-                NEW_LINE, "Attack: ", pokemonData.getEVs().get(StatsType.Attack),
-                NEW_LINE, "Defence: ", pokemonData.getEVs().get(StatsType.Defence),
-                NEW_LINE, "Sp. Attack: ", pokemonData.getEVs().get(StatsType.SpecialAttack),
-                NEW_LINE, "Sp. Defence: ", pokemonData.getEVs().get(StatsType.SpecialDefence),
-                NEW_LINE, "Speed: ", pokemonData.getEVs().get(StatsType.Speed)
+        Text evHover = Text.of(GREEN, "EVs",
+                NEW_LINE, GREEN, "HP: ", LIGHT_PURPLE, pokemonData.getEVs().get(StatsType.HP),
+                NEW_LINE, GREEN, "Attack: ", LIGHT_PURPLE,pokemonData.getEVs().get(StatsType.Attack),
+                NEW_LINE, GREEN, "Defence: ", LIGHT_PURPLE,pokemonData.getEVs().get(StatsType.Defence),
+                NEW_LINE, GREEN, "Sp. Attack: ", LIGHT_PURPLE,pokemonData.getEVs().get(StatsType.SpecialAttack),
+                NEW_LINE, GREEN, "Sp. Defence: ", LIGHT_PURPLE,pokemonData.getEVs().get(StatsType.SpecialDefence),
+                NEW_LINE, GREEN, "Speed: ", LIGHT_PURPLE,pokemonData.getEVs().get(StatsType.Speed)
         );
         evBuilder.onHover(TextActions.showText(evHover));
 
         Text.Builder ivBuilder = Text.builder();
-        ivBuilder.append(Text.of(DARK_GRAY,BOLD,"[",NONE,GREEN,"IVs",DARK_GRAY,BOLD,"]",NONE));
-        Text ivHover = Text.of(LIGHT_PURPLE, UNDERLINE, "IVs",
-                NEW_LINE, "HP: ", pokemonData.getIVs().get(StatsType.HP),
-                NEW_LINE, "Attack: ", pokemonData.getIVs().get(StatsType.Attack),
-                NEW_LINE, "Defence: ", pokemonData.getIVs().get(StatsType.Defence),
-                NEW_LINE, "Sp. Attack: ", pokemonData.getIVs().get(StatsType.SpecialAttack),
-                NEW_LINE, "Sp. Defence: ", pokemonData.getIVs().get(StatsType.SpecialDefence),
-                NEW_LINE, "Speed: ", pokemonData.getIVs().get(StatsType.Speed)
+        ivBuilder.append(Text.of(DARK_GRAY,BOLD,"[",NONE,GREEN,"IVs",DARK_GRAY,BOLD,"]",NONE, RESET));
+        Text ivHover = Text.of(GREEN, "IVs",
+                NEW_LINE, GREEN, "HP: ", LIGHT_PURPLE,pokemonData.getIVs().get(StatsType.HP),
+                NEW_LINE, GREEN, "Attack: ", LIGHT_PURPLE, pokemonData.getIVs().get(StatsType.Attack),
+                NEW_LINE, GREEN, "Defence: ", LIGHT_PURPLE, pokemonData.getIVs().get(StatsType.Defence),
+                NEW_LINE, GREEN, "Sp. Attack: ", LIGHT_PURPLE, pokemonData.getIVs().get(StatsType.SpecialAttack),
+                NEW_LINE, GREEN, "Sp. Defence: ", LIGHT_PURPLE, pokemonData.getIVs().get(StatsType.SpecialDefence),
+                NEW_LINE, GREEN, "Speed: ", LIGHT_PURPLE, pokemonData.getIVs().get(StatsType.Speed)
         );
         ivBuilder.onHover(TextActions.showText(ivHover));
 
         Text.Builder movesBuilder = Text.builder();
         movesBuilder.append(Text.of(DARK_GRAY,BOLD,"[",NONE,GREEN,"Moves",DARK_GRAY,BOLD,"]",NONE));
         Text movesHover = Text.of(
-                BLUE, UNDERLINE, "Moves",
-                NEW_LINE, "Move 1: ", pokemonData.getMoveset().get(0) != null ? pokemonData.getMoveset().get(0).toString() : "None",
-                NEW_LINE, "Move 2: ", pokemonData.getMoveset().get(1) != null ? pokemonData.getMoveset().get(1).toString() : "None",
-                NEW_LINE, "Move 3: ", pokemonData.getMoveset().get(2) != null ? pokemonData.getMoveset().get(2).toString() : "None",
-                NEW_LINE, "Move 4: ", pokemonData.getMoveset().get(3) != null ? pokemonData.getMoveset().get(3).toString() : "None"
+                GREEN, "Moves",
+                NEW_LINE, "Move 1: ", LIGHT_PURPLE, pokemonData.getMoveset().get(0) != null ? pokemonData.getMoveset().get(0).toString() : "None",
+                NEW_LINE, GREEN, "Move 2: ", LIGHT_PURPLE, pokemonData.getMoveset().get(1) != null ? pokemonData.getMoveset().get(1).toString() : "None",
+                NEW_LINE, GREEN, "Move 3: ", LIGHT_PURPLE, pokemonData.getMoveset().get(2) != null ? pokemonData.getMoveset().get(2).toString() : "None",
+                NEW_LINE, GREEN, "Move 4: ", LIGHT_PURPLE, pokemonData.getMoveset().get(3) != null ? pokemonData.getMoveset().get(3).toString() : "None"
         );
         movesBuilder.onHover(TextActions.showText(movesHover));
 
-        return Text.of(DARK_GRAY,BOLD,"[",RESET,NONE,GREEN, pokemonData.getSpecies().name,DARK_GRAY,BOLD,"]",RESET,NONE, " ", statBuilder.build(), " ", evBuilder.build(), " ", ivBuilder.build(), " ", movesBuilder.build());
+        return Text.of(DARK_GRAY,BOLD,"[",NONE,RESET,GREEN, pokemonData.getSpecies().name,DARK_GRAY,BOLD,"]",NONE,RESET, " ", statBuilder.build(), " ", evBuilder.build(), " ", ivBuilder.build(), " ", movesBuilder.build());
     }
 
 }

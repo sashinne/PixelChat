@@ -44,7 +44,7 @@ public class PixelChat {
             UUID uuid = player.getUniqueId();
             PartyStorage party = Pixelmon.storageManager.getParty(uuid);
             Character slot = msg.charAt(msg.length() - 1);
-            Integer slotInt = Integer.parseInt(slot.toString());
+            Integer slotInt = Integer.parseInt(slot.toString())-1;
             Pokemon pokemon = party.get(slotInt);
             event.setCancelled(true);
             Text wat = PokeData.getHoverText(pokemon);

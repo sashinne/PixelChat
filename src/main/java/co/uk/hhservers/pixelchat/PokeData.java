@@ -13,8 +13,10 @@ import com.pixelmonmod.pixelmon.enums.EnumSpecies;
 import com.pixelmonmod.pixelmon.enums.EnumType;
 import com.pixelmonmod.pixelmon.enums.items.EnumPokeballs;
 import net.minecraft.item.ItemStack;
+import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 
 import java.util.ArrayList;
@@ -253,6 +255,22 @@ public class PokeData {
         return lore;
     }
 
+
+    public static Text getPartyText(PartyStorage partyData) {
+        Pokemon[] pokes = partyData.getAll();
+        Text.Builder returnText = TextSerializers.FORMATTING_CODE.deserialize("&aSpecies &b~ &dLevel&r").toBuilder();
+        for (int i = 0; i < pokes.length; i++) {
+            returnText.append(TextSerializers.FORMATTING_CODE.deserialize("\n&a"+pokes[i].getSpecies().name+"&b ~ &d"+pokes[i].getLevel()));
+        }
+        return returnText.build();
+    }
+
+
+    //TODO:implement pagination to display individuals when displaying party in chat
+   /* public static ArrayList<Text> getPartyPageText(PartyStorage partyData){
+        Text.Builder returnText = TextSerializers.FORMATTING_CODE.deserialize("hi").toBuilder();
+    }*/
+
     public static Text getHoverText(Pokemon pokemonData) {
         //★ = black star = \u2605
 
@@ -261,15 +279,15 @@ public class PokeData {
 
         String itemText = getHeldItemName(pokemonData);
 
-        Text statHover = Text.of(DARK_GREEN, UNDERLINE, pokemonData.getDisplayName(),
+        Text statHover = Text.of(DARK_GREEN, pokemonData.getDisplayName(),
                 (pokemonData.isShiny() ? Text.of(YELLOW, "\u2605") : Text.EMPTY),
-                NEW_LINE, AQUA, "Level: ", pokemonData.getLevel(),
-                NEW_LINE, YELLOW, "Nature: ", pokemonData.getNature().toString(),
-                NEW_LINE, GREEN, "Growth: ", pokemonData.getGrowth().toString(),
-                NEW_LINE, GOLD, "Ability: ", (pokemonData.getAbilitySlot() != 2 ? GOLD : GRAY), pokemonData.getAbility().getName(),
-                NEW_LINE, DARK_PURPLE, "OT: ", pokemonData.getOriginalTrainer(),
-                NEW_LINE, RED, "Item: ", itemText,
-                NEW_LINE, LIGHT_PURPLE, "Pokeball:", pokemonData.getCaughtBall().name()
+                NEW_LINE, GREEN, "Level: ",LIGHT_PURPLE, pokemonData.getLevel(),
+                NEW_LINE, GREEN, "Nature: ",LIGHT_PURPLE, pokemonData.getNature().toString(),
+                NEW_LINE, GREEN, "Growth: ",LIGHT_PURPLE, pokemonData.getGrowth().toString(),
+                NEW_LINE, GREEN, "Ability: ",LIGHT_PURPLE, (pokemonData.getAbilitySlot() != 2 ? GOLD : LIGHT_PURPLE), pokemonData.getAbility().getName(),
+                NEW_LINE, GREEN, "OT: ",LIGHT_PURPLE, pokemonData.getOriginalTrainer(),
+                NEW_LINE, GREEN, "Item: ",LIGHT_PURPLE, itemText,
+                NEW_LINE, GREEN, "Pokeball:",LIGHT_PURPLE, pokemonData.getCaughtBall().name()
         );
         statBuilder.onHover(TextActions.showText(statHover));
 

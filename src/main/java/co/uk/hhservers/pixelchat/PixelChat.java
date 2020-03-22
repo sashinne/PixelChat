@@ -11,10 +11,12 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.World;
 import java.util.UUID;
 
@@ -51,15 +53,27 @@ public class PixelChat {
             Text finalmessage = Text.builder("[").color(TextColors.DARK_GRAY)
                     .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
                     .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())
-                    .append(Text.builder("has shared their Pokémon: ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @pokeX, replacing X with a slot number to display your Poké in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
+                    .append(Text.builder("has shared their Pokemon: ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @pokeX, replacing X with a slot number to display your Poke in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
                     .append(Text.of(Text.NEW_LINE))
                     .append(wat).build();
             MessageChannel.TO_PLAYERS.send(finalmessage);
         }
         if (msg.toLowerCase().startsWith("@party")) {
+            event.setCancelled(true);
             UUID uuid = player.getUniqueId();
             PartyStorage playerParty = Pixelmon.storageManager.getParty(uuid);
-            //TODO: Set up party formatter in PokeData like Stats formatter
+            Text partyMessage = Text.builder("[").color(TextColors.DARK_GRAY)
+                    .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
+                    .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())
+                    .append(Text.builder("has shared their ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @party to display your Party in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
+                    .build();
+            Text hoverMessage = Text.builder()
+                    .append(partyMessage)
+                    .append(TextSerializers.FORMATTING_CODE.deserialize("&l&8[&r&aPARTY&r&l&8]&r"))
+                    .onHover(TextActions.showText(PokeData.getPartyText(playerParty)))
+                    .build();
+            MessageChannel.TO_PLAYERS.send(hoverMessage);
+            //MessageChannel.TO_PLAYERS.send(PokeData.getPartyText(playerParty));
         }
     }
 }

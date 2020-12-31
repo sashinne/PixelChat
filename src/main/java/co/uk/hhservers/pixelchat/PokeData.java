@@ -257,11 +257,17 @@ public class PokeData {
 
 
     public static Text getPartyText(PartyStorage partyData) {
-        Pokemon[] pokes = partyData.getAll();
         Text.Builder returnText = TextSerializers.FORMATTING_CODE.deserialize("&aSpecies &b~ &dLevel&r").toBuilder();
-        for (int i = 0; i < pokes.length; i++) {
-            returnText.append(TextSerializers.FORMATTING_CODE.deserialize("\n&a"+pokes[i].getSpecies().name+"&b ~ &d"+pokes[i].getLevel()));
+        Pokemon[] pokes = partyData.getAll();
+
+        for(Pokemon pokemon : pokes){
+            if(!isNull(pokemon)) {
+                returnText.append(TextSerializers.FORMATTING_CODE.deserialize("\n&a" + pokemon.getSpecies().name + "&b ~ &d" + pokemon.getLevel()));
+            }
         }
+        /*for (int i = 0; i < pokes.length; i++) {
+            returnText.append(TextSerializers.FORMATTING_CODE.deserialize("\n&a"+pokes[i].getSpecies().name+"&b ~ &d"+pokes[i].getLevel()));
+        }*/
         return returnText.build();
     }
 
@@ -275,7 +281,7 @@ public class PokeData {
         //★ = black star = \u2605
 
         Text.Builder statBuilder = Text.builder();
-        statBuilder.append(Text.of(DARK_GRAY,BOLD,"[",NONE,GREEN, pokemonData.getSpecies().name, DARK_GRAY,BOLD,"]",RESET));
+        statBuilder.append(TextSerializers.FORMATTING_CODE.deserialize("&l&8[&r&a" +pokemonData.getSpecies().name + "&l&8]&r"));
 
         String itemText = getHeldItemName(pokemonData);
 
@@ -326,7 +332,7 @@ public class PokeData {
         statBuilder.onHover(TextActions.showText(statHover));
 
         Text.Builder movesBuilder = Text.builder();
-        movesBuilder.append(Text.of(DARK_GRAY,BOLD,"[",NONE,GREEN,"Moves",DARK_GRAY,BOLD,"]",NONE));
+        movesBuilder.append(TextSerializers.FORMATTING_CODE.deserialize("&l&8[&r&aMoves&r&l&8]&r"));
         Text movesHover = Text.of(
                 GREEN, "Move 1: ", LIGHT_PURPLE, pokemonData.getMoveset().get(0) != null ? pokemonData.getMoveset().get(0).toString() : "None",
                 NEW_LINE, GREEN, "Move 2: ", LIGHT_PURPLE, pokemonData.getMoveset().get(1) != null ? pokemonData.getMoveset().get(1).toString() : "None",

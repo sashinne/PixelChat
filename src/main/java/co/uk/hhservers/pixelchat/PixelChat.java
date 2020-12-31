@@ -34,6 +34,8 @@ public class PixelChat {
     @Inject
     private Logger logger;
 
+    private PokeData pokeData = new PokeData();
+
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
     }
@@ -43,20 +45,22 @@ public class PixelChat {
         String msg = event.getFormatter().getBody().toText().toPlain();
         logger.info(msg);
         if (msg.toLowerCase().startsWith("@poke")) {
+            event.setCancelled(true);
             UUID uuid = player.getUniqueId();
             PartyStorage party = Pixelmon.storageManager.getParty(uuid);
             Character slot = msg.charAt(msg.length() - 1);
             Integer slotInt = Integer.parseInt(slot.toString())-1;
-            Pokemon pokemon = party.get(slotInt);
-            event.setCancelled(true);
-            Text wat = PokeData.getHoverText(pokemon);
-            Text finalmessage = Text.builder("[").color(TextColors.DARK_GRAY)
-                    .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
-                    .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())
-                    .append(Text.builder("has shared their Pokemon: ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @pokeX, replacing X with a slot number to display your Poke in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
-                    .append(Text.of(Text.NEW_LINE))
-                    .append(wat).build();
-            MessageChannel.TO_PLAYERS.send(finalmessage);
+            if(!PokeData.isNull(party.get(slotInt))) {
+                Pokemon pokemon = party.get(slotInt);
+
+                Text wat = PokeData.getHoverText(pokemon);
+                Text finalmessage = Text.builder("[").color(TextColors.DARK_GRAY)
+                        .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
+                        .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())
+                        .append(Text.builder(": ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @pokeX, replacing X with a slot number to display your Poke in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
+                        .append(wat).build();
+                MessageChannel.TO_PLAYERS.send(finalmessage);
+            } else {player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize("&l&8[&r&aPixel&bChat&l&8]&r &bYou do not have a Pokemon in this slot!"));}
         }
         if (msg.toLowerCase().startsWith("@party")) {
             event.setCancelled(true);
@@ -65,7 +69,7 @@ public class PixelChat {
             Text partyMessage = Text.builder("[").color(TextColors.DARK_GRAY)
                     .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
                     .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())
-                    .append(Text.builder("has shared their ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @party to display your Party in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
+                    .append(Text.builder(": ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @party to display your Party in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
                     .build();
             Text hoverMessage = Text.builder()
                     .append(partyMessage)

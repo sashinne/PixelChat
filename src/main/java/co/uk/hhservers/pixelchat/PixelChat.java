@@ -1,23 +1,24 @@
 package co.uk.hhservers.pixelchat;
 
 import com.google.inject.Inject;
-import com.pixelmonmod.pixelmon.Pixelmon;
-import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
-import com.pixelmonmod.pixelmon.api.storage.PartyStorage;
+import com.pixelmongenerations.common.entity.pixelmon.stats.links.NBTLink;
+import com.pixelmongenerations.core.network.PixelmonData;
+import com.pixelmongenerations.core.storage.PixelmonStorage;
+import com.pixelmongenerations.core.storage.PlayerStorage;
+import net.minecraft.nbt.NBTTagCompound;
 import org.slf4j.Logger;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
-import org.spongepowered.api.world.World;
+
 import java.util.UUID;
 
 @Plugin(
@@ -34,8 +35,6 @@ public class PixelChat {
     @Inject
     private Logger logger;
 
-    private PokeData pokeData = new PokeData();
-
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
     }
@@ -45,31 +44,30 @@ public class PixelChat {
         String msg = event.getFormatter().getBody().toText().toPlain();
         logger.info(msg);
         if (msg.toLowerCase().startsWith("@poke")) {
-            event.setCancelled(true);
             UUID uuid = player.getUniqueId();
-            PartyStorage party = Pixelmon.storageManager.getParty(uuid);
-            Character slot = msg.charAt(msg.length() - 1);
-            Integer slotInt = Integer.parseInt(slot.toString())-1;
-            if(!PokeData.isNull(party.get(slotInt))) {
-                Pokemon pokemon = party.get(slotInt);
-
-                Text wat = PokeData.getHoverText(pokemon);
-                Text finalmessage = Text.builder("[").color(TextColors.DARK_GRAY)
-                        .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
-                        .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())
-                        .append(Text.builder(": ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @pokeX, replacing X with a slot number to display your Poke in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
-                        .append(wat).build();
-                MessageChannel.TO_PLAYERS.send(finalmessage);
-            } else {player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize("&l&8[&r&aPixel&bChat&l&8]&r &bYou do not have a Pokemon in this slot!"));}
+            PlayerStorage party = PixelmonStorage.pokeBallManager.getPlayerStorageFromUUID(uuid).get();
+            char slot = msg.charAt(msg.length() - 1);
+            int slotInt = Integer.parseInt(Character.toString(slot))-1;
+            NBTTagCompound pokemon = party.getTeamIncludeEgg().get(slotInt);
+            NBTLink link = new NBTLink(pokemon);
+            event.setCancelled(true);
+            Text wat = PokeData.getHoverText(link);
+            Text finalmessage = Text.builder("[").color(TextColors.DARK_GRAY)
+                    .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
+                    .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())
+                    .append(Text.builder("has shared their Pokemon: ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @pokeX, replacing X with a slot number to display your Poke in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
+                    .append(Text.of(Text.NEW_LINE))
+                    .append(wat).build();
+            MessageChannel.TO_PLAYERS.send(finalmessage);
         }
         if (msg.toLowerCase().startsWith("@party")) {
             event.setCancelled(true);
             UUID uuid = player.getUniqueId();
-            PartyStorage playerParty = Pixelmon.storageManager.getParty(uuid);
+            PixelmonData[] playerParty = PixelmonStorage.pokeBallManager.getPlayerStorageFromUUID(uuid).get().convertToData();
             Text partyMessage = Text.builder("[").color(TextColors.DARK_GRAY)
                     .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
                     .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())
-                    .append(Text.builder(": ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @party to display your Party in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
+                    .append(Text.builder("has shared their ").color(TextColors.AQUA).onHover(TextActions.showText(Text.builder("Type @party to display your Party in chat.").color(TextColors.LIGHT_PURPLE).build())).build())
                     .build();
             Text hoverMessage = Text.builder()
                     .append(partyMessage)

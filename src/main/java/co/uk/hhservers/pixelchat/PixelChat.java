@@ -22,8 +22,8 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 import java.util.UUID;
 
 @Plugin(
-        id = "chatpixel",
-        name = "PixelChat",
+        id = "chatpixelgen",
+        name = "PixelChatGenerations",
         description = "PixelChat allows you to display your Pixelmon in chat",
         url = "http://hhservers.co.uk",
         authors = {

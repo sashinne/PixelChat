@@ -1,23 +1,24 @@
 package co.uk.hhservers.pixelchat;
 
 import com.google.inject.Inject;
-import com.pixelmonmod.pixelmon.Pixelmon;
-import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
-import com.pixelmonmod.pixelmon.api.storage.PartyStorage;
+import com.pixelmongenerations.common.entity.pixelmon.stats.links.NBTLink;
+import com.pixelmongenerations.core.network.PixelmonData;
+import com.pixelmongenerations.core.storage.PixelmonStorage;
+import com.pixelmongenerations.core.storage.PlayerStorage;
+import net.minecraft.nbt.NBTTagCompound;
 import org.slf4j.Logger;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.filter.Getter;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
-import org.spongepowered.api.world.World;
+
 import java.util.UUID;
 
 @Plugin(
@@ -44,12 +45,13 @@ public class PixelChat {
         logger.info(msg);
         if (msg.toLowerCase().startsWith("@poke")) {
             UUID uuid = player.getUniqueId();
-            PartyStorage party = Pixelmon.storageManager.getParty(uuid);
-            Character slot = msg.charAt(msg.length() - 1);
-            Integer slotInt = Integer.parseInt(slot.toString())-1;
-            Pokemon pokemon = party.get(slotInt);
+            PlayerStorage party = PixelmonStorage.pokeBallManager.getPlayerStorageFromUUID(uuid).get();
+            char slot = msg.charAt(msg.length() - 1);
+            int slotInt = Integer.parseInt(Character.toString(slot))-1;
+            NBTTagCompound pokemon = party.getTeamIncludeEgg().get(slotInt);
+            NBTLink link = new NBTLink(pokemon);
             event.setCancelled(true);
-            Text wat = PokeData.getHoverText(pokemon);
+            Text wat = PokeData.getHoverText(link);
             Text finalmessage = Text.builder("[").color(TextColors.DARK_GRAY)
                     .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
                     .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())
@@ -61,7 +63,7 @@ public class PixelChat {
         if (msg.toLowerCase().startsWith("@party")) {
             event.setCancelled(true);
             UUID uuid = player.getUniqueId();
-            PartyStorage playerParty = Pixelmon.storageManager.getParty(uuid);
+            PixelmonData[] playerParty = PixelmonStorage.pokeBallManager.getPlayerStorageFromUUID(uuid).get().convertToData();
             Text partyMessage = Text.builder("[").color(TextColors.DARK_GRAY)
                     .append(Text.builder(player.getName()).color(TextColors.LIGHT_PURPLE).build())
                     .append(Text.builder("] ").color(TextColors.DARK_GRAY).build())

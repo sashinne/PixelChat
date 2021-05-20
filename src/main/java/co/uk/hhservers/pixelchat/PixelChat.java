@@ -62,7 +62,7 @@ public class PixelChat {
                 MessageChannel.TO_PLAYERS.send(finalmessage);
             } else {player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize("&l&8[&r&aPixel&bChat&l&8]&r &bYou do not have a Pokemon in this slot!"));}
         }
-        if (msg.toLowerCase().startsWith("@party")) {
+        if (msg.toLowerCase().startsWith("!party")) {
             event.setCancelled(true);
             UUID uuid = player.getUniqueId();
             PartyStorage playerParty = Pixelmon.storageManager.getParty(uuid);
